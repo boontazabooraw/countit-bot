@@ -1,15 +1,44 @@
-// src/db.js
-import Database from 'better-sqlite3';
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
-export function setupDb() {
-    const db = new Database('naegus.sqlite');
+dotenv.config();
 
-    // Create table
-    db.prepare(`
-        CREATE TABLE IF NOT EXISTS nword_counts (
-        user_id TEXT PRIMARY KEY,
-        count INTEGER DEFAULT 0
-        )
-    `).run();
-    return db;
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
+
+export async function insertOrUpdate(userId) {
+    try {
+        const { error } = await supabase
+            .from('nword_counts')
+            .upsert(
+                { user_id: userId, count: 1 },
+                { onConflict: 'user_id' }
+            )
+            .select();
+
+        if (error) {
+            console.error(`Supabase Insert Error: ${error.message}`);
+        }
+    } catch (err) {
+        console.error(`Error: ${err}`)
+    }
+}
+
+export async function getLeaderboard() {
+    try {
+        const { data, error } = await supabase
+            .from('nword_counts')
+            .select('*')
+            .order('count', { ascending: false })
+            .limit(10)
+
+        if (error) {
+            console.error(`Supabase Select Error: ${error.message}`);
+            return [];
+        }
+
+        return data || [];
+    } catch (err) {
+        console.error(`Error: ${err}`)
+        return [];
+    }
 }
