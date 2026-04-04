@@ -1,9 +1,11 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from 'dotenv';
 import messageCreateHandler from "./events/messageCreate.js";
+import express from "express";
 
 dotenv.config();
 
+// --- Discord Bot ---
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -52,3 +54,18 @@ client.on('messageCreate', (message) => messageCreateHandler(message));
 // });
 
 client.login(process.env.TOKENING_SHET);
+
+
+
+// --- Defibrillator Method (Express + cron-job)
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Bot is alive. . .');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+})
