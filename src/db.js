@@ -7,16 +7,29 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY
 
 export async function insertOrUpdate(userId) {
     try {
-        const { error } = await supabase
+        const { data: existing, error: selectError } = await supabase
             .from('nword_counts')
-            .upsert(
-                { user_id: userId, count: 1 },
-                { onConflict: 'user_id' }
-            )
-            .select();
+            .select('count')
+            .eq('user_id', userId)
+            .single();
 
-        if (error) {
-            console.error(`Supabase Insert Error: ${error.message}`);
+        // PGRST116 means no rows were found
+        if (selectError && selectError.code !== 'PGRST116') {
+            console.error(`Supabase Select Error: ${error.message}`);
+            return;
+        }
+
+        let newCount = 1;
+        if (existing) {
+            newCount = existing.count + 1;
+        }
+
+        const { error: upsertError } = await supabase
+            .from('nword_counts')
+            .upsert({ user_id: userId, count: newCount }, { onConflict: 'user_id' });
+
+        if (upsertError) {
+            console.error(`Supabase Upsert Error: ${upsertError.message}`)
         }
     } catch (err) {
         console.error(`Error: ${err}`)

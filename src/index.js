@@ -1,7 +1,6 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import dotenv from 'dotenv';
 import messageCreateHandler from "./events/messageCreate.js";
-import { setupDb } from "./db.js";
 
 dotenv.config();
 
@@ -13,15 +12,13 @@ const client = new Client({
     ]
 });
 
-const db = setupDb();
-
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
 });
 
-client.on('messageCreate', (message) => messageCreateHandler(message, db));
+client.on('messageCreate', (message) => messageCreateHandler(message));
 
-// TESTING
+// TESTING WITH LOCAL VARIABLE
 //
 // const Nicounts = {};
 //
