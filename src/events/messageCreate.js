@@ -31,4 +31,21 @@ export default async function messageCreateHandler(message) {
     if (message.content === 'n!selftest') {
         message.channel.send('NIGGAAAAAAAAAAAAAAAA!!!');
     }
+
+    // 0-100%
+    if (message.content.startsWith('n!gger')) {
+        const mentionedUser = message.mentions.users.first() || message.author;
+        const percentage = Math.floor(Math.random() * 101);
+
+        message.channel.send(
+            `${mentionedUser} is ${percentage}% a knee gear! 💀💀💀💀💀💀`
+        )
+
+        if(percentage === 100) {
+            message.channel.send(
+                `AGHAGHHGAHAGHA TANGINA ANG ITIM-ITIM MO ${mentionedUser}!!! 😡😡😡😡`
+            )
+        }
+
+    }
 }
