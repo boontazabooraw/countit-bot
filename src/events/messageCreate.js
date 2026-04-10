@@ -4,12 +4,14 @@ import count_er from "../commands/count_er.js";
 import hm from "../commands/hm.js";
 import selfdox from "../commands/selfdox.js";
 import calc from "../commands/calc.js";
+import fetchUser from "../commands/fetchUser.js";
 
 const commands = {
     'n!leaderboard': leaderboard,
     'n!gger': hm,
     'n!test': selfdox,
     'n!calc': calc,
+    'n!fetch': fetchUser,
 }
 
 export default async function messageCreateHandler(message) {
@@ -35,5 +37,10 @@ export default async function messageCreateHandler(message) {
     const command = commands[message.content.split(' ')[0]];
     if (command) {
         await command.execute(message);
+        let forLog = {
+            user: `${message.author.username} | ${message.author.globalName}`,
+            query: message.content,
+        }
+        console.log(JSON.stringify(forLog));
     }
 }
