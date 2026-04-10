@@ -1,4 +1,4 @@
-import { insertOrUpdate } from "../db.js";
+import { insertOrUpdate } from "../utils/db.js";
 
 export default {
     name: 'count',

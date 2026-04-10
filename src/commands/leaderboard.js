@@ -1,4 +1,4 @@
-import { getLeaderboard } from "../db.js";
+import { getLeaderboard } from "../utils/db.js";
 
 export default {
     name: 'leaderboard',
