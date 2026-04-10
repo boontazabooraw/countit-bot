@@ -2,11 +2,13 @@ import leaderboard from "../commands/leaderboard.js";
 import count from "../commands/count.js";
 import hm from "../commands/hm.js";
 import selfdox from "../commands/selfdox.js";
+import calc from "../commands/calc.js";
 
 const commands = {
     'n!leaderboard': leaderboard,
     'n!gger': hm,
     'n!test': selfdox,
+    'n!calc': calc,
 }
 
 export default async function messageCreateHandler(message) {
