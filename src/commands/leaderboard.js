@@ -11,9 +11,9 @@ export default {
         }
 
         const leaderboard = rows
-            .map((row, i) => `${i + 1}. <@${row.user_id}> - ${row.count}`)
+            .map((row, i) => `**${i + 1}.** <@${row.user_id}> - ${row.count} times (${row.count_er} with Hard-R)`)
             .join('\n');
 
-        message.channel.send(`🏆 HALL OF NEGROS 🏆\n${leaderboard}`);
+        message.channel.send(`# 🏆 Top N-Word Users of All Time 🏆\n${leaderboard}`);
     }
 }
