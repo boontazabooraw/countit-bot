@@ -20,11 +20,12 @@ export default async function messageCreateHandler(message) {
     //     return count.execute(message);
     // }
 
-    if (/NIG+GA+$/i.test(message.content.toUpperCase())) {
+    if (/N+I+G+A+$/i.test(message.content.toUpperCase())) {
         return count.execute(message);
     }
 
-    if (/NIG+GE+R+$/i.test(message.content.toUpperCase())) {
+    if (/N+I+G+E+R+$/i.test(message.content.toUpperCase())) {
+        count.execute(message);
         return count_er.execute(message);
     }
 
