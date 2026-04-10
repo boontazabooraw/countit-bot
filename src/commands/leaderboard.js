@@ -1,16 +1,19 @@
-export function insertOrUpdate(db, userId) {
-    db.prepare(`
-            INSERT INTO nword_counts (user_id, count)
-            VALUES (?, 1)
-            ON CONFLICT(user_id) DO UPDATE SET count = count + 1
-        `).run(userId);
-}
+import { getLeaderboard } from "../utils/db.js";
 
-export function getLeaderboard(db) {
-    return db.prepare(`
-            SELECT user_id, count
-            FROM nword_counts
-            ORDER BY count DESC
-            LIMIT 10
-        `).all();
+export default {
+    name: 'leaderboard',
+    description: 'Ah yes... the list of the most racist people in the server.',
+    async execute(message) {
+        const rows = await getLeaderboard();
+
+        if (!rows || rows.length === 0) {
+            return message.channel.send("Damn, wala pa nagN-word sainyo?!");
+        }
+
+        const leaderboard = rows
+            .map((row, i) => `${i + 1}. <@${row.user_id}> - ${row.count}`)
+            .join('\n');
+
+        message.channel.send(`🏆 HALL OF NEGROS 🏆\n${leaderboard}`);
+    }
 }

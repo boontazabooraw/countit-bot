@@ -1,51 +1,27 @@
-import { getLeaderboard, insertOrUpdate } from "../db.js";
+import leaderboard from "../commands/leaderboard.js";
+import count from "../commands/count.js";
+import hm from "../commands/hm.js";
+import selfdox from "../commands/selfdox.js";
+import calc from "../commands/calc.js";
+
+const commands = {
+    'n!leaderboard': leaderboard,
+    'n!gger': hm,
+    'n!test': selfdox,
+    'n!calc': calc,
+}
 
 export default async function messageCreateHandler(message) {
     if (message.author.bot) return;
 
-    // Count the nis
+    // WORD detector
     if (message.content.toUpperCase().includes('NIG')) {
-        await insertOrUpdate(message.author.id);
+        return count.execute(message);
     }
 
-    // Leaderboard (Top 10)
-    if (message.content === 'n!leaderboard') {
-        const rows = await getLeaderboard();
-
-        if (!rows || rows.length === 0) {
-            message.channel.send('```BADING BA KAYO TANGINA?!```');
-            return;
-        }
-
-        const leaderboard = rows
-            .map((row, i) => `${i + 1}. <@${row.user_id}> - ${row.count}`)
-            .join('\n');
-
-        message.channel.send(`🏆 HALL OF NEGROS 🏆\n${leaderboard}`);
-    }
-
-    if (message.content === 'n!ping') {
-        message.channel.send('Buhay pa ako nigga');
-    }
-
-    if (message.content === 'n!selftest') {
-        message.channel.send('NIGGAAAAAAAAAAAAAAAA!!!');
-    }
-
-    // 0-100%
-    if (message.content.startsWith('n!gger')) {
-        const mentionedUser = message.mentions.users.first() || message.author;
-        const percentage = Math.floor(Math.random() * 101);
-
-        message.channel.send(
-            `${mentionedUser} is ${percentage}% a knee gear! 💀💀💀💀💀💀`
-        )
-
-        if(percentage === 100) {
-            message.channel.send(
-                `AGHAGHHGAHAGHA TANGINA ANG ITIM-ITIM MO ${mentionedUser}!!! 😡😡😡😡`
-            )
-        }
-
+    // Prefix-based, from the commands constant
+    const command = commands[message.content.split(' ')[0]];
+    if (command) {
+        await command.execute(message);
     }
 }
